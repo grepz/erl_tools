@@ -10,10 +10,16 @@
 
 %% API exports
 %% API
--export([log/2, now/0, local_time_to_seconds/1, seconds_to_local_time/1,
-         local_time_to_string/1, unix_time_to_string/1, get_app_env/2]).
+-export([log/2]).
+
+-export([now/0, local_time_to_seconds/1, seconds_to_local_time/1,
+         local_time_to_string/1, unix_time_to_string/1]).
+
+-export([get_app_env/2]).
 
 -export([duration/1]).
+
+-export([to_binary/1]).
 
 -define(SECONDS1970, 62167219200). %% {{1970,1,1}, {0,0,0}}
 
@@ -49,7 +55,7 @@ now() ->
     MegaS * 1000000 + S.
 -else.
 now() ->
-    {MegaS, S, _MicroS} = erlang:now(),
+    {MegaS, S, _MicroS} = erlang:timestamp(),
     MegaS * 1000000 + S.
 -endif.
 
@@ -79,6 +85,17 @@ get_app_env(Opt, Default) ->
                 error       -> Default
             end
     end.
+
+to_binary(Int) when is_integer(Int) ->
+    to_binary(integer_to_list(Int));
+to_binary(List) when is_list(List) ->
+    list_to_binary(List);
+to_binary(Atom) when is_atom(Atom) ->
+    to_binary(atom_to_list(Atom));
+to_binary(Bin) when is_binary(Bin) ->
+    Bin;
+to_binary(_) ->
+    throw(bad_arg).
 
 %%====================================================================
 %% Internal functions
