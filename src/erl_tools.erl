@@ -19,7 +19,7 @@
 
 -export([duration/1]).
 
--export([to_binary/1, to_string/1]).
+-export([to_binary/1, to_string/1, to_atom/1]).
 
 -define(SECONDS1970, 62167219200). %% {{1970,1,1}, {0,0,0}}
 
@@ -106,6 +106,17 @@ to_string(Atom) when is_atom(Atom) ->
 to_string(List) when is_list(List) ->
     List;
 to_string(_) ->
+    throw(bad_arg).
+
+to_atom(Int) when is_integer(Int) ->
+    list_to_atom(to_string(Int));
+to_atom(Bin) when is_binary(Bin) ->
+    list_to_atom(to_string(Bin));
+to_atom(Atom) when is_atom(Atom) ->
+    Atom;
+to_atom(List) ->
+    list_to_atom(lists:flatten(List));
+to_atom(_) ->
     throw(bad_arg).
 
 %%====================================================================
