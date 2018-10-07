@@ -114,7 +114,7 @@ to_atom(Bin) when is_binary(Bin) ->
     list_to_atom(to_string(Bin));
 to_atom(Atom) when is_atom(Atom) ->
     Atom;
-to_atom(List) ->
+to_atom(List) when is_list(List) ->
     list_to_atom(lists:flatten(List));
 to_atom(_) ->
     throw(bad_arg).
